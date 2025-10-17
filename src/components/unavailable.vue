@@ -51,5 +51,6 @@ const handleClick = () => {
 }
 .card-text button{
     width: 230px;
+    height: 40px;
 }
 </style>

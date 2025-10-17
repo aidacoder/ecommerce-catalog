@@ -1,8 +1,8 @@
 <script setup>
 import Unavailable from './components/unavailable.vue';
 import { ref, onMounted } from 'vue'
-import axios from 'axios';
 import './assets/style.css'
+import axios from 'axios';
 
 
 const Products = ref([])
@@ -22,7 +22,7 @@ function getProduct() {
 
 
 
-function NextProduct() {
+function nextProduct() {
   id.value++
   getProduct()
   console.log(id.value)
@@ -47,31 +47,31 @@ function isHideProduct(product) {
   return true
 }
 
-function isMen(product) {
+function categoryProduct(product) {
   console.log("hello")
   if (!product || !product.category) {
-    return true
+    return false
   }
   if (product.category === "men's clothing") {
     return true
   }
   if (product.category === "women's clothing") {
-    return false
+    return false 
   }
-  return true
 
+return 'unavailable'
 }
-
-
-
 </script>
 
 
 
 <template>
-  <div :class="{ 'body-men': isMen(item), 'body-women': !isMen(item) }" v-for="item in Products" :key="item.id">
+  <div :class="{ 'body-men': categoryProduct(item), 'body-women': !categoryProduct(item),'body-unavailable': categoryProduct(item) === 'unavailable' }"
+  
+    v-for="item in Products" :key="item.id">
+
     <div v-if="isHideProduct(item)">
-      <Unavailable @buttonClicked="NextProduct" />
+      <Unavailable @buttonClicked="nextProduct" />
     </div>
     <div class=" card" v-else>
       <div class="card-picture">
@@ -80,33 +80,37 @@ function isMen(product) {
       </div>
 
       <div class="card-description">
-        <div class="card-description-text1">
+        <div :class="{'description-text1-men': categoryProduct(item),'description-text1-women': !categoryProduct(item)}">
           {{ item.title }}
         </div>
 
         <div class="card-category-text">
           {{ item.category }}
-        </div>
-
-        <div class="rating">
-          {{ item.rating.rate }}
-          {{ item.rating.count }}
+          <div class="rating">
+         <div>{{ item.rating.rate }}/</div> 
+         <div> {{ item.rating.count }}</div>
 
         </div>
-        <div class="line">
+        </div>
+
+        
+        
           <hr class="line-hr">
-        </div>
-
-
+  
         <div class="card-category-text-detail">
           {{ item.description }}
         </div>
         <hr class="line-hr1">
-        <h1 class="card-category-price"> ${{ item.price }}</h1>
+        <h1 :class="{'card-category-price-men': categoryProduct(item),'card-category-price-women': !categoryProduct(item)}" > ${{ item.price }}</h1>
 
         <div class="btn">
-          <button class="btn-buy">Buy Now</button>
-          <button class="btn-next" @click="NextProduct">Next-Product</button>
+          <button :class="{'btn-buy-men': categoryProduct(item),'btn-buy-women': !categoryProduct(item)}">
+             Buy Now
+          </button>
+
+          <button :class="{'btn-next-men': categoryProduct(item),'btn-next-women': !categoryProduct(item)}" @click="nextProduct">
+            Next-Product
+          </button>
         </div>
 
       </div>
@@ -124,39 +128,9 @@ function isMen(product) {
 body {
   margin: 0;
   padding: 0;
-}
-
-.body-women {
-    margin: auto;
-    background-color: #FDE2FF;
-    width: auto;
-    height: 540px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-.body-men {
-    margin: auto;
-    background-color: #D6E6FF;
-    width: auto;
-    height: 540px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+  font-family: 'Inter', sans-serif;
 }
 
 
-.men {
-  background-color: red;
-  width: 100px;
-  height: 100px;
-}
 
-.women {
-  background-color: blue;
-  width: 100px;
-  height: 100px;
-}
 </style>
