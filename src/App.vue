@@ -31,7 +31,6 @@ function nextProduct() {
   }
 }
 
-
 onMounted(() => {
   getProduct()
 })
@@ -43,7 +42,6 @@ function isHideProduct(product) {
   if (product.category === "men's clothing" || product.category === "women's clothing") {
     return false
   }
-
   return true
 }
 
@@ -67,7 +65,6 @@ return 'unavailable'
 
 <template>
   <div :class="{ 'body-men': categoryProduct(item), 'body-women': !categoryProduct(item),'body-unavailable': categoryProduct(item) === 'unavailable' }"
-  
     v-for="item in Products" :key="item.id">
 
     <div v-if="isHideProduct(item)">
