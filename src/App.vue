@@ -4,12 +4,12 @@ import { ref, onMounted } from 'vue'
 import './assets/style.css'
 import axios from 'axios';
 
-
 const Products = ref([])
 const id = ref(1)
-
+const loading = ref(true);
 
 function getProduct() {
+  loading.value = true;
   axios.get(`https://fakestoreapi.com/products/${id.value}`)
     .then((res) => {
       Products.value = [res.data]
@@ -17,10 +17,10 @@ function getProduct() {
     .catch((err) => {
       console.error('Error:', err)
     })
+    .finally(() => {
+      loading.value = false; 
+    });
 }
-
-
-
 
 function nextProduct() {
   id.value++
@@ -34,8 +34,6 @@ function nextProduct() {
 onMounted(() => {
   getProduct()
 })
-
-
 
 function isHideProduct(product) {
   console.log(product.category)
@@ -64,7 +62,13 @@ return 'unavailable'
 
 
 <template>
-  <div :class="{ 'body-men': categoryProduct(item), 'body-women': !categoryProduct(item),'body-unavailable': categoryProduct(item) === 'unavailable' }"
+
+<div v-if="loading" class="loader">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+
+  <div v-else :class="{ 'body-men': categoryProduct(item), 'body-women': !categoryProduct(item),'body-unavailable': categoryProduct(item) === 'unavailable' }"
     v-for="item in Products" :key="item.id">
 
     <div v-if="isHideProduct(item)">
